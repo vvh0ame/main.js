@@ -2,7 +2,7 @@ import requests
 from uuid import uuid4
 
 class MAIN:
-	def __init__(self, device_id: str = None):
+	def __init__(self, device_id: str = None) -> None:
 		self.api = "https://app.main.community"
 		self.device_id = self.generate_device_id() if not device_id else device_id
 		self.headers = {
@@ -14,7 +14,7 @@ class MAIN:
 		self.access_token = None
 
 
-	def generate_device_id(self):
+	def generate_device_id(self) -> str:
 		return str(uuid4())
 
 	def register(
@@ -23,7 +23,7 @@ class MAIN:
 			nickname: str,
 			social_network_id: int,
 			social_network_token: str,
-			invite_code: str = None):
+			invite_code: str = None) -> dict:
 		data = {
 			"countryId": country_id,
 			"nickname": nickname,
@@ -37,7 +37,7 @@ class MAIN:
 			json=data,
 			headers=self.headers).json()
 
-	def login_with_google(self, google_id_token: str):
+	def login_with_google(self, google_id_token: str) -> dict:
 		data = {
 			"socialNetwork": 3,
 			"socialNetworkToken": google_id_token
@@ -52,49 +52,49 @@ class MAIN:
 			self.headers["access-token"] = self.access_token
 		return response
 
-	def login_with_access_token(self, access_token: str):
+	def login_with_access_token(self, access_token: str) -> dict:
 		self.access_token = access_token
 		self.headers["access-token"] = self.access_token
 		response = self.get_account_info()
 		self.user_id = response["id"]
 		return response
 
-	def get_account_info(self):
+	def get_account_info(self) -> dict:
 		return requests.get(
 			f"{self.api}/users/me",
 			headers=self.headers).json()
 
-	def get_account_profile(self):
+	def get_account_profile(self) -> dict:
 		return requests.get(
 			f"{self.api}/users/me/profile",
 			headers=self.headers).json()
 
-	def get_account_activity(self):
+	def get_account_activity(self) -> dict:
 		return requests.get(
 			f"{self.api}/users/me/activity",
 			headers=self.headers).json()
 
-	def get_account_wallet(self):
+	def get_account_wallet(self) -> dict:
 		return requests.get(
 			f"{self.api}/users/me/wallet",
 			headers=self.headers).json()
 
-	def get_auth_web_token(self):
+	def get_auth_web_token(self) -> dict:
 		return requests.get(
 			f"{self.api}/auth/getWebToken",
 			headers=self.headers).json()
 
-	def get_prices_info(self):
+	def get_prices_info(self) -> dict:
 		return requests.get(
 			f"{self.api}/info/prices",
 			headers=self.headers).json()
 
-	def get_unread_notifications(self):
+	def get_unread_notifications(self) -> dict:
 		return requests.get(
 			f"{self.api}/notifications/unread",
 			headers=self.headers).json()
 
-	def get_boardclaims_notifications(self):
+	def get_boardclaims_notifications(self) -> dict:
 		return requests.get(
 			f"{self.api}/notifications/boardclaims",
 			headers=self.headers).json()
@@ -106,7 +106,7 @@ class MAIN:
 			type: int = None,
 			region: int = None,
 			categories: int = None,
-			sort_period: str = None):
+			sort_period: str = None) -> dict:
 		url = f"{self.api}/feed?limit={limit}&offset={offset}"
 		if type:
 			url += f"&type={type}"
@@ -119,32 +119,32 @@ class MAIN:
 		return requests.get(
 			url, headers=self.headers).json()
 
-	def get_topics(self):
+	def get_topics(self) -> dict:
 		return requests.get(
 			f"{self.api}/tags/topics",
 			headers=self.headers).json()
 
-	def get_rocket_price(self):
+	def get_rocket_price(self) -> dict:
 		return requests.get(
 			f"{self.api}/info/rocketprice",
 			headers=self.headers).json()
 
-	def subscribe_tag(self, tag_id: int):
+	def subscribe_tag(self, tag_id: int) -> int:
 		return requests.put(
 			f"{self.api}/tags/{tag_id}/subscribe",
 			headers=self.headers).status_code
 
-	def unsubscribe_tag(self, tag_id: int):
+	def unsubscribe_tag(self, tag_id: int) -> int:
 		return requests.put(
 			f"{self.api}/tags/{tag_id}/unsubscribe",
 			headers=self.headers).status_code
 
-	def get_user_info(self, user_id: int):
+	def get_user_info(self, user_id: int) -> dict:
 		return requests.get(
 			f"{self.api}/users/{user_id}",
 			headers=self.headers).json()
 
-	def get_user_wallet(self, user_id: int):
+	def get_user_wallet(self, user_id: int) -> dict:
 		return requests.get(
 			f"{self.api}/users/{user_id}/wallet",
 			headers=self.headers).json()		
@@ -153,7 +153,7 @@ class MAIN:
 			self,
 			user_id: int,
 			limit: int = 40,
-			offset: int = 0):
+			offset: int = 0) -> dict:
 		return requests.get(
 			f"{self.api}/users/{user_id}/followed?limit={limit}&offset={offset}",
 			headers=self.headers).json()
@@ -162,7 +162,7 @@ class MAIN:
 			self,
 			user_id: int,
 			limit: int = 40,
-			offset: int = 0):
+			offset: int = 0) -> dict:
 		return requests.get(
 			f"{self.api}/users/{user_id}/followers?limit={limit}&offset={offset}",
 			headers=self.headers).json()
@@ -172,7 +172,7 @@ class MAIN:
 			user_id: int,
 			limit: int = 40,
 			offset: int = 0,
-			type: int = None):
+			type: int = None) -> dict:
 		url = f"{self.api}/users/{user_id}/posts?limit={limit}&offset={offset}"
 		if type:
 			url += f"&type={type}"
@@ -183,7 +183,7 @@ class MAIN:
 			self,
 			user_id: int,
 			limit: int = 20,
-			offset: int = 0):
+			offset: int = 0) -> dict:
 		return requests.get(
 			f"{self.api}/users/{user_id}/comments?offset={offset}&limit={limit}",
 			headers=self.headers).json()
@@ -192,7 +192,7 @@ class MAIN:
 			self,
 			user_id: int,
 			limit: int = 100,
-			offset: int = 0):
+			offset: int = 0) -> dict:
 		return requests.get(
 			f"{self.api}/users/{user_id}/ownedTags?offset={offset}&limit={limit}",
 			headers=self.headers).json()
@@ -201,17 +201,17 @@ class MAIN:
 			self,
 			user_id: int,
 			limit: int = 100,
-			offset: int = 0):
+			offset: int = 0) -> dict:
 		return requests.get(
 			f"{self.api}/users/{user_id}/moderatedTags?offset={offset}&limit={limit}",
 			headers=self.headers).json()
 
-	def get_referral(self):
+	def get_referral(self) -> dict:
 		return requests.get(
 			f"{self.api}/referral",
 			headers=self.headers).json()
 
-	def get_post_info(self, post_id: int):
+	def get_post_info(self, post_id: int) -> dict:
 		return requests.get(
 			f"{self.api}/posts/{post_id}",
 			headers=self.headers).json()
@@ -221,34 +221,34 @@ class MAIN:
 			post_id: int,
 			offset: int = 0,
 			limit: int = 40,
-			nested: int = None):
+			nested: int = None) -> dict:
 		url = f"{self.api}/posts/{post_id}/comments?offset={offset}&limit={limit}"
 		if nested:
 			url += f"&nested={nested}"
 		return requests.get(
 			url, headers=self.headers).json()
 
-	def like_post(self, post_id: int):
+	def like_post(self, post_id: int) -> dict:
 		return requests.put(
 			f"{self.api}/posts/{post_id}/like",
 			headers=self.headers).json()
 
-	def dislike_post(self, post_id: int):
+	def dislike_post(self, post_id: int) -> dict:
 		return requests.put(
 			f"{self.api}/posts/{post_id}/dislike",
 			headers=self.headers).json()
 
-	def norate_post(self, post_id: int):
+	def norate_post(self, post_id: int) -> dict:
 		return requests.post(
 			f"{self.api}/posts/{post_id}/norate",
 			headers=self.headers).json()
 
-	def share_post(self, post_id: int):
+	def share_post(self, post_id: int) -> dict:
 		return requests.put(
 			f"{self.api}/posts/{post_id}/share",
 			headers=self.headers).json()
 
-	def vote_post(self, post_id: int):
+	def vote_post(self, post_id: int) -> dict:
 		return requests.put(
 			f"{self.api}/posts/{post_id}/vote",
 			headers=self.headers).json()
@@ -266,7 +266,7 @@ class MAIN:
 			text: str = None,
 			type: int = -1,
 			width: int = 1,
-			reply_comment_id: int = 0):
+			reply_comment_id: int = 0) -> dict:
 		data = {
 			"mediaItem": {},
 			"replyCommentId": reply_comment_id,
@@ -298,7 +298,7 @@ class MAIN:
 	def edit_comment(
 			self,
 			comment_id: int,
-			text: str):
+			text: str) -> dict:
 		data = {
 			"text": text
 		}
@@ -307,22 +307,22 @@ class MAIN:
 			json=data,
 			headers=self.headers).json()
 
-	def delete_comment(self, comment_id: int):
+	def delete_comment(self, comment_id: int) -> dict:
 		return requests.delete(
 			f"{self.api}/comments/{comment_id}",
 			headers=self.headers).json()
 
-	def like_comment(self, comment_id: int):
+	def like_comment(self, comment_id: int) -> dict:
 		return requests.put(
 			f"{self.api}/comments/{comment_id}/like",
 			headers=self.headers).json()
 
-	def dislike_comment(self, comment_id: int):
+	def dislike_comment(self, comment_id: int) -> dict:
 		return requests.put(
 			f"{self.api}/comments/{comment_id}/dislike",
 			headers=self.headers).json()
 
-	def norate_comment(self, comment_id: int):
+	def norate_comment(self, comment_id: int) -> dict:
 		return requests.post(
 			f"{self.api}/comments/{comment_id}/norate",
 			headers=self.headers).json()
@@ -330,7 +330,7 @@ class MAIN:
 	def edit_profile(
 			self,
 			description: str = None,
-			avatar_preview_url: str = None):
+			avatar_preview_url: str = None) -> dict:
 		data = {}
 		if description:
 			data["description"] = description
@@ -347,7 +347,7 @@ class MAIN:
 			offset: int = 0,
 			coins: int = 1,
 			favorites: int = 1,
-			promoted: int = 1):
+			promoted: int = 1) -> dict:
 		url = f"{self.api}/explore?limit={limit}&offset={offset}"
 		if coins:
 			url += f"&coins={coins}"
@@ -358,22 +358,22 @@ class MAIN:
 		return requests.get(
 			url, headers=self.headers).json()
 
-	def get_tag_info(self, tag_id: int):
+	def get_tag_info(self, tag_id: int) -> dict:
 		return requests.get(
 			f"{self.api}/tags/{tag_id}",
 			headers=self.headers).json()
 
-	def get_tag_activity(self, tag_id: int):
+	def get_tag_activity(self, tag_id: int) -> dict:
 		return requests.get(
 			f"{self.api}/tags/{tag_id}/activity",
 			headers=self.headers).json()
 
-	def get_tag_moderators(self, tag_id: int):
+	def get_tag_moderators(self, tag_id: int) -> dict:
 		return requests.get(
 			f"{self.api}/tags/{tag_id}/moderators",
 			headers=self.headers).json()
 
-	def get_tag_rules(self, tag_id: int):
+	def get_tag_rules(self, tag_id: int) -> dict:
 		return requests.get(
 			f"{self.api}/tags/{tag_id}/rules",
 			headers=self.headers).json()
@@ -382,7 +382,7 @@ class MAIN:
 			self,
 			tag_id: int,
 			limit: int = 40,
-			offset: int = 0):
+			offset: int = 0) -> dict:
 		return requests.get(
 			f"{self.api}/tags/{tag_id}/activity_rating?limit={limit}&offset={offset}",
 			headers=self.headers).json()
@@ -391,7 +391,7 @@ class MAIN:
 			self,
 			query: str,
 			limit: int = 40,
-			offset: int = 0):
+			offset: int = 0) -> dict:
 		return requests.get(
 			f"{self.api}/users?search={query}&limit={limit}&offset={offset}",
 			headers=self.headers).json()
@@ -401,7 +401,7 @@ class MAIN:
 			query: str,
 			limit: int = 40,
 			offset: int = 0,
-			foreign: int = 1):
+			foreign: int = 1) -> dict:
 		return requests.get(
 			f"{self.api}/users?search={query}&limit={limit}&offset={offset}&foreign={foreign}",
 			headers=self.headers).json()
@@ -409,32 +409,32 @@ class MAIN:
 	def get_notifications(
 			self,
 			limit: int = 40,
-			offset: int = 0):
+			offset: int = 0) -> dict:
 		return requests.get(
 			f"{self.api}/notifications?offset={offset}&limit={limit}",
 			headers=self.headers).json()
 
-	def delete_post(self, post_id: int):
+	def delete_post(self, post_id: int) -> int:
 		return requests.delete(
 			f"{self.api}/posts/{post_id}",
 			headers=self.headers).status_code
 
-	def block_user(self, user_id: int):
+	def block_user(self, user_id: int) -> int:
 		return requests.put(
 			f"{self.api}/users/{user_id}/blacklist/add",
 			headers=self.headers).status_code
 
-	def unblock_user(self, user_id: int):
+	def unblock_user(self, user_id: int) -> int:
 		return requests.put(
 			f"{self.api}/users/{user_id}/blacklist/remove",
 			headers=self.headers).status_code
 
-	def mute_user(self, user_id: int):
+	def mute_user(self, user_id: int) -> int:
 		return requests.put(
 			f"{self.api}/users/{user_id}/mute",
 			headers=self.headers).status_code
 
-	def unmute_user(self, user_id: int):
+	def unmute_user(self, user_id: int) -> int:
 		return requests.put(
 			f"{self.api}/users/{user_id}/unmute",
 			headers=self.headers).status_code
@@ -442,7 +442,7 @@ class MAIN:
 	def report_user(
 			self,
 			user_id: int,
-			report_type: int):
+			report_type: int) -> int:
 		data = {
 			"claimType": report_type
 		}
