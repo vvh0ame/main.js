@@ -6,7 +6,7 @@ Mobile-API for [MAIN](https://play.google.com/store/apps/details?id=is.mdk.app) 
 async function main() {
 	const { Main } = require("./main.js")
 	const main = new Main()
-	await weHeartIt.loginWithGoogle("googleIdToken")
+	await main.loginWithGoogle("googleIdToken")
 }
 
 main()
